@@ -20,4 +20,4 @@ github_username:  dalmatele
 # Build settings
 markdown: kramdown
 #theme
-theme: jekyll-theme-cayman
+remote_theme: jekyll-theme-cayman

@@ -19,3 +19,5 @@ github_username:  dalmatele
 markdown: kramdown
 #theme
 remote_theme: pages-themes/leap-day
+
+theme: jekyll-theme-cayman

@@ -2,8 +2,9 @@
 layout: page
 title: "How to create a Makefile"
 date: 2019-11-13 14:34:10 -0000categories: C programming
-## Some Rules
 ---
+
+## Some Rules
 
 These are some rules applied when write a Makefile.
 

@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: post
 title: "How to create a Makefile"
 date: 2019-11-13 14:34:10 -0000categories: C programming
 ---

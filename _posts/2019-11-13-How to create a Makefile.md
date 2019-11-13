@@ -1,7 +1,9 @@
+---
 layout: page
 title: "How to create a Makefile"
 date: 2019-11-13 14:34:10 -0000categories: C programming
 ## Some Rules
+---
 
 These are some rules applied when write a Makefile.
 
@@ -10,7 +12,7 @@ These are some rules applied when write a Makefile.
 * Use variables later in this format `$(VAR_NAME)` or `${VAR_NAME}`. The surrounding parents/braces are required.
 * The general layout of a rule is as follow:
 
-```
+```makefile
 #comment
 target: dependency1 dependency2
     <tab> command
@@ -27,30 +29,30 @@ target: dependency1 dependency2
 
 Let's start by printing the classic "Hello World" on the terminal. Create a empty directory **myproject** containing a file **Makefile** with this content:
 
-```
+```makefile
 say_hello:
         echo "Hello World"
 ```
 
 Now run the file by typing `make` inside the directory `myproject`. The output will be:
 
-```
+```makefile
 $ make
 echo "Hello World"
 Hello World
 ```
 
-In the example above, `say_hello` behaves like a function name, as in any programming language. This is called the `target`. The __prerequisites__ or __dependencies__ follow the target. For the sake of simplicity, we have not defined any prerequisites in this example. The command `echo "Hello World"` is called the `recipe`. The recipe uses prerequisites to make a target. The target, prerequisites, and recipes together make a rule.
+In the example above, `say_hello` behaves like a function name, as in any programming language. This is called the `target`. The *prerequisites* or *dependencies* follow the target. For the sake of simplicity, we have not defined any prerequisites in this example. The command `echo "Hello World"` is called the `recipe`. The recipe uses prerequisites to make a target. The target, prerequisites, and recipes together make a rule.
 
 To summarize, below is the syntax of a typical rule:
-```
+```makefile
 target: prerequisites
 <TAB> recipe
 ```
 
 As an example, a target might be a binary file that depends on prerequisites (source files). On the other hand, a prerequisite can also be a target that depends on other dependencies:
 
-```
+```makefile
 final_target: sub_target final_target.c
         Recipe_to_create_final_target
 
@@ -62,21 +64,21 @@ It is not necessary for the target to be a file; it could be just a name for the
 
 Going back to the example above, when make was executed, the entire command `echo "Hello World"` was displayed, followed by actual command output. We often don't want that. To suppress echoing the actual command, we need to start echo with `@`:
 
-```
+```makefile
 say_hello:
         @echo "Hello World"
 ```
 
 Now try to run `make` again. The output should display only this:
 
-```
+```makefile
 $ make
 Hello World
 ```
 
 Let's add a few more phony targets: `generate` and `clean` to the `Makefile`:
 
-```
+```makefile
 say_hello:
         @echo "Hello World"
 
@@ -89,17 +91,17 @@ clean:
         rm *.txt
 ```
 
-If we try to run `make` after the changes, only the target `say_hello` will be executed. That's because only the first target in the makefile is the default target. Often called the __default goal__, this is the reason you will see `all` as the first target in most projects. It is the responsibility of all to call other targets. We can override this behavior using a special phony target called `.DEFAULT_GOAL`.
+If we try to run `make` after the changes, only the target `say_hello` will be executed. That's because only the first target in the makefile is the default target. Often called the *default goal*, this is the reason you will see `all` as the first target in most projects. It is the responsibility of all to call other targets. We can override this behavior using a special phony target called `.DEFAULT_GOAL`.
 
 Let's include that at the beginning of our makefile:
 
-```
+```makefile
 .DEFAULT_GOAL := generate
 ```
 
 This will run the target generate as the default:
 
-```
+```makefile
 $ make
 Creating empty text files...
 touch file-{1..10}.txt
@@ -109,7 +111,7 @@ As the name suggests, the phony target `.DEFAULT_GOAL` can run only one target a
 
 Let's include the phony target `all` and remove `.DEFAULT_GOAL`:
 
-```
+```makefile
 all: say_hello generate
 
 say_hello:
@@ -126,7 +128,7 @@ clean:
 
 Before running `make`, let's include another special phony target, `.PHONY`, where we define all the targets that are not files. `make` will run its recipe regardless of whether a file with that name exists or what its last modification time is. Here is the complete makefile:
 
-```
+```makefile
 .PHONY: all say_hello generate clean
 
 all: say_hello generate
@@ -145,7 +147,7 @@ clean:
 
 The make should call `say_hello` and `generate`:
 
-```
+```makefile
 $ make
 Hello World
 Creating empty text files...
@@ -154,7 +156,7 @@ touch file-{1..10}.txt
 
 It is a good practice not to call `clean` in `all` or put it as the first target. `clean` should be called manually when cleaning is needed as a first argument to `make`:
 
-```
+```makefile
 $ make clean
 Cleaning up...
 rm *.txt
@@ -170,26 +172,26 @@ In the above example, most target and prerequisite values are hard-coded, but in
 
 The simplest way to define a variable in a makefile is to use the = operator. For example, to assign the command `gcc` to a variable `CC`:
 
-```
+```makefile
 CC = gcc
 ```
 
 This is also called a __recursive expanded variable,__ and it is used in a rule as shown below:
 
-```
+```makefile
 hello: hello.c
     ${CC} hello.c -o hello
 ```
 
 As you may have guessed, the recipe expands as below when it is passed to the terminal:
 
-```
+```makefile
 gcc hello.c -o hello
 ```
 
 Both `${CC}` and `$(CC)` are valid references to call gcc. But if one tries to reassign a variable to itself, it will cause an infinite loop. Let's verify this:
 
-```
+```makefile
 CC = gcc
 CC = ${CC}
 
@@ -199,14 +201,14 @@ all:
 
 Running `make` will result in:
 
-```
+```makefile
 $ make
 Makefile:8: *** Recursive variable 'CC' references itself (eventually).  Stop.
 ```
 
 To avoid this scenario, we can use the := operator (this is also called the simply expanded variable). We should have no problem running the makefile below:
 
-```
+```makefile
 CC := gcc
 CC := ${CC}
 
@@ -218,7 +220,7 @@ all:
 
 The following makefile can compile all C programs by using variables, patterns, and functions. Let's explore it line by line:
 
-```
+```makefile
 # Usage:
 # make        # compile all binary
 # make clean  # remove ALL binaries and objects
@@ -261,7 +263,7 @@ clean:
 
 * Rule:
 
-```
+```makefile
 %: %.o
   @echo "Checking.."
   ${CC} ${LINKERFLAG} $&lt; -o $@
@@ -269,7 +271,7 @@ clean:
 
 Let's look at an example to understand this rule. Suppose **foo** is one of the values in **${BINS}**. Then % will match **foo** (% can match any target name). Below is the rule in its expanded form:
 
-```
+```makefile
 foo: foo.o
   @echo "Checking.."
   gcc -lm foo.o -o foo
@@ -279,7 +281,7 @@ As shown, % is replaced by **foo**. **$<** is replaced by **foo.o**. **$<** is p
 
 * Rule:
 
-```
+```makefile
 %.o: %.c
   @echo "Creating object.."
   ${CC} -c $&lt;
@@ -287,7 +289,7 @@ As shown, % is replaced by **foo**. **$<** is replaced by **foo.o**. **$<** is p
 
 Every prerequisite in the previous rule is considered a target for this rule. Below is the rule in its expanded form:
 
-```
+```makefile
 foo.o: foo.c
   @echo "Creating object.."
   gcc -c foo.c
@@ -297,7 +299,7 @@ foo.o: foo.c
 
 Below is the rewrite of the above makefile, assuming it is placed in the directory having a single file **foo.c**:
 
-```
+```makefile
 # Usage:
 # make        # compile all binary
 # make clean  # remove ALL binaries and objects

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to create a Makefile"
+title: "How to create a RPM package"
 date: 2019-11-20 16:35:10 -0000
 categories: Centos
 ---

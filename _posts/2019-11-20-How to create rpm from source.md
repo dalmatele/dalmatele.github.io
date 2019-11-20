@@ -29,8 +29,11 @@ SRPMS     | When `rpmbuild` is used to build an SRPM instead of a binary RPM, th
 You must put your source code directory in SOURCES folder.
 ### Prepare spec file
 A SPEC file can be thought of as the "recipe" that the `rpmbuild` utility uses to actually build an RPM. It tells the build system what to do by defining instructions in a series of sections. The sections are defined in the *Preamble* and the *Body*. The *Preamble* contains a series of metadata items that are used in the Body. The *Body* contains the main part of the instructions.
-####Preamable Items
+
+#### Preamable Items
+
 This table lists the items used in the Preamble section of the RPM SPEC file:
+
 SPEC Directive | Definition
 ---------------|-----------
 Name           | The base name of the package, which should match the SPEC file name.

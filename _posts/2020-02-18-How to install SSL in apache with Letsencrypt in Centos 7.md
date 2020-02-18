@@ -9,37 +9,52 @@ categories: Centos
 ### Install Apache:
 #### Prepare Apache
 * Update repo:
-`sudo yum update`
+
+    `sudo yum update`
 * Install Apache:
-`sudo yum install httpd openssl`
+
+    `sudo yum install httpd openssl`
 * Active Apache:
-`sudo systemctl start httpd`
+
+    `sudo systemctl start httpd`
 * Set Apache as a service in Centos:
-`sudo systemctl enable httpd`
+
+    `sudo systemctl enable httpd`
 * Verify Apache service:
-`sudo systemctl status httpd`
+
+    `sudo systemctl status httpd`
 * Configure firewalld to Allow Apache Traffic
     * Modify firewall to allow connections on these ports using the following commands:
-    `sudo firewall-cmd --permanent --add-port=80/tcp`
-    `sudo firewall-cmd --permanent --add-port=443/tcp`
+
+        `sudo firewall-cmd --permanent --add-port=80/tcp`
+
+        `sudo firewall-cmd --permanent --add-port=443/tcp`
     * Reload firewall to enable config:
-    `sudo firewall-cmd --reload`
+
+        `sudo firewall-cmd --reload`
 * Install `mod_ssl` module:
-`sudo yum install mod_ssl`
+
+    `sudo yum install mod_ssl`
 #### Create Apache's virtual host:
 * We need to add to `/etc/httpd/conf/httpd.conf`, this line:
-`IncludeOptional sites-enabled/*.conf`
+
+    `IncludeOptional sites-enabled/*.conf`
 * If you want to change default root document, you can change this line:
-`DocumentRoot "/var/www/html"`
-to
-`DocumentRoot "/var/www/yourdomain.com/html"`
+
+    `DocumentRoot "/var/www/html"`
+    
+    to
+
+    `DocumentRoot "/var/www/yourdomain.com/html"`
 * Create `sites-available` folder if not exist:
-`sudo mkdir -p /etc/httpd/sites-available`
+
+    `sudo mkdir -p /etc/httpd/sites-available`
 * Create `sites-enable` folder if not exist:
-`sudo mkdir -p /etc/httpd/sites-enable`
+
+    `sudo mkdir -p /etc/httpd/sites-enable`
 * Create virtual host for `http`, note: you must enable HTTP protocol in port 80 to help acme.sh works.
     * In `sites-availabel`, create a file with name `yourdomain.com.conf`, with this content:
-    ```
+    ~~~
         <VirtualHost *:80>
             ServerName yourdomain1.com
             ServerAlias www.yourdomain1.com
@@ -53,37 +68,52 @@ to
             #AllowOverride All
             #</Directory>
         </VirtualHost>
-    ```
+    ~~~
     * Link `yourdomain.com.conf` to `sites-enable` folder:
-    `sudo ln -s yourdomain.com.conf /etc/httpd/sites-enable/yourdomain.com.conf`
+
+        `sudo ln -s yourdomain.com.conf /etc/httpd/sites-enable/yourdomain.com.conf`
     * Restart `httpd`:
-    `sudo systemctl restart httpd`
+
+        `sudo systemctl restart httpd`
 ### Install Acme:
 * Install git:
-`sudo yum install git`
+
+    `sudo yum install git`
 * Get acme.sh software:
-`git clone https://github.com/Neilpang/acme.sh.git`
+
+    `git clone https://github.com/Neilpang/acme.sh.git`
 * Install acme.sh:
-`cd ./acme.sh && ./acme.sh --install`
+
+    `cd ./acme.sh && ./acme.sh --install`
 * Test acme.sh install:
-`acme.sh -h`
+
+    `acme.sh -h`
 * Create a new `/.well-known/acme-challenge` directory in `yourdomain.com/html` directory
-`sudo mkdir -p /var/www/yourdomain.com/html/.well-known/acme-challenge/`
-`sudo chown apache:apache -R /var/www/yourdomain.com/html/.well-known/acme-challenge`
-`sudo chmod -R 0555 /var/www/yourdomain.com/html/.well-known/acme-challenge`
+
+    `sudo mkdir -p /var/www/yourdomain.com/html/.well-known/acme-challenge/`
+
+    `sudo chown apache:apache -R /var/www/yourdomain.com/html/.well-known/acme-challenge`
+
+    `sudo chmod -R 0555 /var/www/yourdomain.com/html/.well-known/acme-challenge`
 ## Install SSL
 * Generate `dhparams`:
-`sudo openssl dhparam -out /etc/httpd/ssl/yourdomain/dhparams.pem -dsaparam 4096`
+
+    `sudo openssl dhparam -out /etc/httpd/ssl/yourdomain/dhparams.pem -dsaparam 4096`
 * Obtain an SSL certificate for your domain:
-`acme.sh --issue -w /var/www/yourdomain.com/html -d yourdomain1.com -k 2048`
-`acme.sh --issue -w /var/www/yourdomain.com/html -d yourdomain2.com -k 2048`
+
+    `acme.sh --issue -w /var/www/yourdomain.com/html -d yourdomain1.com -k 2048`
+
+    `acme.sh --issue -w /var/www/yourdomain.com/html -d yourdomain2.com -k 2048`
 * Install certificates:
-`acme.sh --installcert -d yourdomain1.com --keypath /etc/httpd/ssl/yourdomain/yourdomain1.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain1.cer --reload "systemctl reload httpd"`
-``acme.sh --installcert -d yourdomain2.com --keypath /etc/httpd/ssl/yourdomain/yourdomain2.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain2.cer --reload "systemctl reload httpd"``
+
+    `acme.sh --installcert -d yourdomain1.com --keypath /etc/httpd/ssl/yourdomain/yourdomain1.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain1.cer --reload "systemctl reload httpd"`
+
+    `acme.sh --installcert -d yourdomain2.com --keypath /etc/httpd/ssl/yourdomain/yourdomain2.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain2.cer --reload "systemctl reload httpd"`
 * Config Apache to use SSL/TLS:
     * Access `sites-available` folder.
     * Create `yourdomain.com.ssl.conf` file with this content:
-    ```
+
+    ~~~
     #
     # When we also provide SSL we have to listen to the 
     # standard HTTPS port in addition.
@@ -203,7 +233,7 @@ to
     SSLStaplingResponderTimeout 5
     SSLStaplingReturnResponderErrors off
     SSLStaplingCache        shmcb:/var/run/ocsp(128000)
-    ```
+    ~~~
 ## Reference link:
 [How To Set Up Multiple SSL Certificates On a CentOS VPS With Apache Using One IP Address](https://www.rosehosting.com/blog/how-to-set-up-multiple-ssl-certificates-on-a-centos-vps-with-apache-using-one-ip-address/)
 [Apache with Let’s Encrypt Certificates on CentOS 8](https://www.cyberciti.biz/faq/apache-with-lets-encrypt-certificates-on-centos-8/)

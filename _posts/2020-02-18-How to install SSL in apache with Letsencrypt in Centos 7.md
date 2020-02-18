@@ -106,9 +106,9 @@ categories: Centos
     `acme.sh --issue -w /var/www/yourdomain.com/html -d yourdomain2.com -k 2048`
 * Install certificates:
 
-    `acme.sh --installcert -d yourdomain1.com --keypath /etc/httpd/ssl/yourdomain/yourdomain1.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain1.cer --reload "systemctl reload httpd"`
+    `acme.sh --installcert -d yourdomain1.com --keypath /etc/httpd/ssl/yourdomain/yourdomain1.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain1.cer --reloadcmd "systemctl reload httpd"`
 
-    `acme.sh --installcert -d yourdomain2.com --keypath /etc/httpd/ssl/yourdomain/yourdomain2.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain2.cer --reload "systemctl reload httpd"`
+    `acme.sh --installcert -d yourdomain2.com --keypath /etc/httpd/ssl/yourdomain/yourdomain2.key --fullchainpath /etc/httpd/ssl/yourdomain/yourdomain2.cer --reloadcmd "systemctl reload httpd"`
 * Config Apache to use SSL/TLS:
     * Access `sites-available` folder.
     * Create `yourdomain.com.ssl.conf` file with this content:

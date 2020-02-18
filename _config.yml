@@ -20,3 +20,4 @@ markdown: kramdown
 #theme
 
 theme: jekyll-theme-cayman
+disqus: dalmatele.github.io

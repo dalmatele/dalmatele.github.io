@@ -1,8 +1,8 @@
---
+---
 layout: post
 title: "Word Tetris's policy"
 categories: Games
---
+---
 
 ## Privacy Policy
 

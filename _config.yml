@@ -19,4 +19,4 @@ comments: true
 markdown: kramdown
 #theme
 
-theme: minimaå
+theme: minima

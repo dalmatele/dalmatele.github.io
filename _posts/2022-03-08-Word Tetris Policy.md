@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Word Tetris's policy"
-date: 2022-03-09 00:18:10 -0000
+date: 2022-03-09 00:30:10 -0000
 categories: Games
 ---
 

@@ -20,3 +20,4 @@ markdown: kramdown
 #theme
 
 theme: minima
+future: true

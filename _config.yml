@@ -19,4 +19,4 @@ comments: true
 markdown: kramdown
 #theme
 
-theme: jekyll-theme-time-machine
+theme: jekyll-theme-cayman

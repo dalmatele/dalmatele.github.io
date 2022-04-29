@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Find the Word's policy"
+title: "Find the Word's policy"
 date: 2022-04-30 01:42:10 -0000
 categories: Games
 ---
